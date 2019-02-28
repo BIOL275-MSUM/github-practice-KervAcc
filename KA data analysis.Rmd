@@ -16,26 +16,28 @@ library(readxl)     # load readxl, for reading Excel files
 library(tidyverse)  # load tidyverse, for working with datasets
 ```
 
+## Read data 
+
+Read the finches data
 ```{r}
-# read data ---------------------------------------------------------------
-
-# read the finches data
 finches <- read_excel("finches_data.xlsx")
-
-# print the finches tibble in the console
-finches
 
 ```
 
+Print the finches tibble in the console
 ```{r}
-# take a quick look at all the variables in the dataset
+finches
+```
+
+Take a quick look at all the variables in the dataset
+```{r}
 glimpse(finches)
 ```
 
-```{r}
-# histogram ---------------------------------------------------------------
+## Histogram
 
-# histogram of beak length, grouped by survival, with labels
+Histogram of beak length, grouped by survival, with labels
+```{r}
 ggplot(
   data = finches,                     # use the finches dataset
   mapping = aes(x = beak_length,      # put beak length on the x axis
@@ -51,10 +53,10 @@ ggplot(
   )
 ```
 
-```{r}
-# summarize ---------------------------------------------------------------
+## Summarize
 
-# summarize the dataset by outcome (survived vs. died)
+Summarize the dataset by outcome (survived vs. died)
+```{r}
 beak_length_grouped_summary <- 
   finches %>% 
   group_by(outcome) %>% 
@@ -69,10 +71,10 @@ beak_length_grouped_summary <-
 beak_length_grouped_summary
 ```
 
-```{r}
-# bar chart ---------------------------------------------------------------
 
-# bar chart of mean beak lengths
+## Comparison analysis
+Bar chart of mean beak lengths
+```{r}
 ggplot(
   data = beak_length_grouped_summary,   # dont use the original finches dataset
   mapping = aes(x = outcome,            # survival on the x axis
@@ -93,33 +95,37 @@ ggplot(
   )
 ```
 
-```{r}
-# t-test ------------------------------------------------------------------
+## T-test
 
-# get a vector of beak lengths for birds that died
+Get a vector of beak lengths for birds that died
+```{r}
 beak_length_died <-
   finches %>%                     # start with finches dataset
   filter(outcome == "died") %>%   # only include rows w/ outcome=died
   pull(beak_length)               # extract the beak_length column
+```
 
-# print the new object in the console... it is a vector
+Print the new object in the console... it is a vector
+```{r}
 beak_length_died
 ```
 
+Get a vector of beak lengths for birds that survived
 ```{r}
-# get a vector of beak lengths for birds that survived
+
 beak_length_survived <-
   finches %>% 
   filter(outcome == "survived") %>% 
   pull(beak_length)
-
-# print the results in the console
-beak_length_survived
-
 ```
 
+Print the results in the console
 ```{r}
-# perform a two-sample t-test assuming unequal variances
+beak_length_survived
+```
+
+Perform a two-sample t-test assuming unequal variances
+```{r}
 t.test(beak_length_died, beak_length_survived)
 ```
 

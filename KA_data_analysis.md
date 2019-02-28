@@ -22,13 +22,18 @@ library(tidyverse)  # load tidyverse, for working with datasets
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
+Read data
+---------
+
+Read the finches data
+
 ``` r
-# read data ---------------------------------------------------------------
-
-# read the finches data
 finches <- read_excel("finches_data.xlsx")
+```
 
-# print the finches tibble in the console
+Print the finches tibble in the console
+
+``` r
 finches
 ```
 
@@ -48,8 +53,9 @@ finches
     ## # ... with 90 more rows, and 4 more variables: tarsus <dbl>,
     ## #   beak_length <dbl>, beak_depth <dbl>, beak_width <dbl>
 
+Take a quick look at all the variables in the dataset
+
 ``` r
-# take a quick look at all the variables in the dataset
 glimpse(finches)
 ```
 
@@ -68,10 +74,12 @@ glimpse(finches)
     ## $ beak_depth       <dbl> 8.3, 7.5, 8.0, 10.6, 11.2, 9.1, 9.5, 10.5, 8....
     ## $ beak_width       <dbl> 8.1, 7.5, 7.6, 9.4, 9.5, 8.8, 8.9, 9.1, 8.2, ...
 
-``` r
-# histogram ---------------------------------------------------------------
+Histogram
+---------
 
-# histogram of beak length, grouped by survival, with labels
+Histogram of beak length, grouped by survival, with labels
+
+``` r
 ggplot(
   data = finches,                     # use the finches dataset
   mapping = aes(x = beak_length,      # put beak length on the x axis
@@ -87,12 +95,14 @@ ggplot(
   )
 ```
 
-![](KA_data_analysis_files/figure-markdown_github/unnamed-chunk-4-1.png)
+![](KA_data_analysis_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
+Summarize
+---------
+
+Summarize the dataset by outcome (survived vs. died)
 
 ``` r
-# summarize ---------------------------------------------------------------
-
-# summarize the dataset by outcome (survived vs. died)
 beak_length_grouped_summary <- 
   finches %>% 
   group_by(outcome) %>% 
@@ -113,10 +123,12 @@ beak_length_grouped_summary
     ## 1 died      10.5 0.698    50 0.0987  10.7  10.3
     ## 2 survived  11.1 0.840    50 0.119   11.3  10.8
 
-``` r
-# bar chart ---------------------------------------------------------------
+Comparison analysis
+-------------------
 
-# bar chart of mean beak lengths
+Bar chart of mean beak lengths
+
+``` r
 ggplot(
   data = beak_length_grouped_summary,   # dont use the original finches dataset
   mapping = aes(x = outcome,            # survival on the x axis
@@ -137,18 +149,23 @@ ggplot(
   )
 ```
 
-![](KA_data_analysis_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](KA_data_analysis_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+T-test
+------
+
+Get a vector of beak lengths for birds that died
 
 ``` r
-# t-test ------------------------------------------------------------------
-
-# get a vector of beak lengths for birds that died
 beak_length_died <-
   finches %>%                     # start with finches dataset
   filter(outcome == "died") %>%   # only include rows w/ outcome=died
   pull(beak_length)               # extract the beak_length column
+```
 
-# print the new object in the console... it is a vector
+Print the new object in the console... it is a vector
+
+``` r
 beak_length_died
 ```
 
@@ -158,14 +175,18 @@ beak_length_died
     ## [34] 10.30 11.10 10.50 11.00 10.00 10.30 11.70 10.20 10.90 11.90 10.20
     ## [45] 10.50 10.50  9.80 11.80 11.00 10.30
 
+Get a vector of beak lengths for birds that survived
+
 ``` r
-# get a vector of beak lengths for birds that survived
 beak_length_survived <-
   finches %>% 
   filter(outcome == "survived") %>% 
   pull(beak_length)
+```
 
-# print the results in the console
+Print the results in the console
+
+``` r
 beak_length_survived
 ```
 
@@ -175,8 +196,9 @@ beak_length_survived
     ## [34] 11.30 12.13 12.03 10.63 11.83 12.43 12.73 10.33 11.03 12.53 12.13
     ## [45] 10.43 10.53 11.23 11.23 10.90 10.50
 
+Perform a two-sample t-test assuming unequal variances
+
 ``` r
-# perform a two-sample t-test assuming unequal variances
 t.test(beak_length_died, beak_length_survived)
 ```
 
